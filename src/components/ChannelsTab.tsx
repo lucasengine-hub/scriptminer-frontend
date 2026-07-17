@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Radio, TrendingUp, Clock, Users, Eye, Heart, Zap } from 'lucide-react';
+import { Radio, TrendingUp, Clock, Eye, Heart, Zap } from 'lucide-react';
 import { type Channel, mockChannels, formatNumber } from '../lib/types';
 import { PageHeader, SectionCard } from './ui';
 
@@ -130,28 +130,22 @@ export function ChannelsTab() {
             icon={<TrendingUp className="w-4 h-4 text-emerald-400" />}
           >
             <div className="space-y-3">
-              {selected.topNiches.map((niche, i) => {
-                const score = [94, 81, 68][i] ?? 70;
-                const stats = [
-                  { icon: <Eye className="w-3.5 h-3.5" />, label: '2.4M views' },
-                  { icon: <Heart className="w-3.5 h-3.5" />, label: '180K likes' },
-                  { icon: <Users className="w-3.5 h-3.5" />, label: '12K novos' },
-                ][i];
+              {selected.topNiches.map((niche) => {
                 return (
-                  <div key={niche} className="p-4 rounded-xl bg-ink-950/40 border border-white/5">
+                  <div key={niche.name} className="p-4 rounded-xl bg-surface-subtle border border-default">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-100">{niche}</span>
-                      <span className="text-xs font-bold text-emerald-400">{score}%</span>
+                      <span className="text-sm font-semibold text-primary">{niche.name}</span>
+                      <span className="text-xs font-bold text-emerald-400">{niche.score}%</span>
                     </div>
                     <div className="h-1.5 rounded-full bg-white/5 overflow-hidden mb-3">
                       <div
                         className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-700"
-                        style={{ width: `${score}%` }}
+                        style={{ width: `${niche.score}%` }}
                       />
                     </div>
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      {stats.icon}
-                      <span>{stats.label}</span>
+                    <div className="flex items-center gap-3 text-[11px] text-muted">
+                      <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{niche.views}</span>
+                      <span className="flex items-center gap-1"><Heart className="w-3 h-3" />{niche.likes}</span>
                     </div>
                   </div>
                 );

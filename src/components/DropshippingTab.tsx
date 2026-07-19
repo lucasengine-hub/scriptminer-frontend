@@ -4,8 +4,9 @@ import {
   Shield, Lightbulb, Zap, Eye, Copy, Sparkles,
 } from 'lucide-react';
 import {
-  spyFeed, dropshippingKnowledge, dropshippingPalettes, type SpyCreative, type KnowledgeItem, type PlatformPalette,
+  dropshippingKnowledge, dropshippingPalettes, type KnowledgeItem, type PlatformPalette,
 } from '../lib/mockdata';
+import { seedSpyCreatives, type SeedSpyCreative } from '../lib/seeddata';
 import { sanitizeInput, isValidUrl } from '../lib/security';
 import { CopyButton, PageHeader, SectionCard, inputClass } from './ui';
 
@@ -76,8 +77,8 @@ export function DropshippingTab({ t, onImportProduct, consumeCredits, addRankPoi
     if (!isAdmin) consumeCredits(5);
   };
 
-  const handleClone = (creative: SpyCreative) => {
-    onImportProduct(creative.product, `Niche: ${creative.niche}. Hook: ${creative.hook}. Structure: ${creative.copyStructure}`, creative.hook);
+  const handleClone = (creative: SeedSpyCreative) => {
+    onImportProduct(creative.product, `Niche: ${creative.niche}. Hook: ${creative.hook}. Structure: ${creative.copyStructure}. Ad text: ${creative.adText}`, creative.hook);
     if (!isAdmin) consumeCredits(10);
   };
 
@@ -176,10 +177,9 @@ export function DropshippingTab({ t, onImportProduct, consumeCredits, addRankPoi
         <div className="space-y-6">
           <SectionCard title={t('spyFeed')} subtitle={t('spyFeedSubtitle')} icon={<Eye className="w-4 h-4 text-accent-400" />}>
             <div className="space-y-4">
-              {spyFeed.map((creative: SpyCreative) => (
+              {seedSpyCreatives.map((creative) => (
                 <div key={creative.id} className="p-4 rounded-xl bg-surface-subtle border border-default hover:border-strong transition-all">
                   <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Video thumbnail mock */}
                     <div className="w-full sm:w-24 h-32 sm:h-24 rounded-lg bg-gradient-to-br from-ink-950 to-ink-800 border border-default flex items-center justify-center shrink-0 relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                       <Eye className="w-6 h-6 text-accent-400 relative" />
@@ -192,15 +192,20 @@ export function DropshippingTab({ t, onImportProduct, consumeCredits, addRankPoi
                           <p className="text-[11px] text-muted">{creative.niche}</p>
                         </div>
                       </div>
-                      <p className="text-xs text-muted mb-3 italic">"{creative.hook}"</p>
-                      <div className="grid grid-cols-3 gap-2 mb-3">
-                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-accent-400">{creative.ctr}%</p><p className="text-[9px] text-muted uppercase">{t('ctr')}</p></div>
-                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-emerald-400">{(creative.views / 1000000).toFixed(1)}M</p><p className="text-[9px] text-muted uppercase">{t('views')}</p></div>
-                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-amber-400">{(creative.clicks / 1000).toFixed(0)}K</p><p className="text-[9px] text-muted uppercase">{t('clicks')}</p></div>
+                      <p className="text-xs text-muted mb-2 italic">"{creative.hook}"</p>
+                      <div className="p-3 rounded-lg bg-ink-950/40 border border-default mb-3">
+                        <p className="text-[10px] text-muted uppercase tracking-wide mb-1">Anúncio completo</p>
+                        <p className="text-xs text-primary leading-relaxed whitespace-pre-wrap">{creative.adText}</p>
+                      </div>
+                      <div className="grid grid-cols-4 gap-2 mb-3">
+                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-accent-400">{creative.ctr}%</p><p className="text-[9px] text-muted uppercase">CTR</p></div>
+                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-emerald-400">R$ {creative.cpc.toFixed(2)}</p><p className="text-[9px] text-muted uppercase">CPC</p></div>
+                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-amber-400">{(creative.views / 1000000).toFixed(1)}M</p><p className="text-[9px] text-muted uppercase">Views</p></div>
+                        <div className="text-center p-2 rounded-lg bg-ink-950/40 border border-default"><p className="text-sm font-bold text-blue-400">{(creative.clicks / 1000).toFixed(0)}K</p><p className="text-[9px] text-muted uppercase">Clicks</p></div>
                       </div>
                       <div className="flex gap-2">
                         <button onClick={() => handleClone(creative)} className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-accent-500 to-blue-700 px-3 py-2 text-xs font-semibold text-white shadow-glow hover:-translate-y-0.5 transition-all"><Copy className="w-3.5 h-3.5" />{t('cloneCopy')}</button>
-                        <CopyButton text={creative.copyStructure} t={t} label={t('copy')} />
+                        <CopyButton text={creative.adText} t={t} label="Copiar Anúncio" />
                       </div>
                     </div>
                   </div>

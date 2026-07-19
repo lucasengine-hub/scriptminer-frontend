@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DollarSign, TrendingUp, Users, ChevronLeft, ChevronRight, Crown, Award, Star } from 'lucide-react';
-import { monthlyRevenue, mockTransactions, formatCurrency, type Transaction } from '../lib/mockdata';
+import { monthlyRevenue, formatCurrency, type Transaction } from '../lib/mockdata';
+import { seedTransactions } from '../lib/seeddata';
 import { Badge, PageHeader, SectionCard, StatCard, RankBadge } from './ui';
 import type { RankInfo } from '../lib/store';
 
@@ -108,8 +109,8 @@ interface DashboardTabProps {
 
 export function DashboardTab({ t, rank }: DashboardTabProps) {
   const [page, setPage] = useState(0);
-  const totalPages = Math.ceil(mockTransactions.length / 5);
-  const pageItems = mockTransactions.slice(page * 5, page * 5 + 5);
+  const totalPages = Math.ceil(seedTransactions.length / 5);
+  const pageItems = seedTransactions.slice(page * 5, page * 5 + 5);
 
   return (
     <div>
@@ -135,7 +136,7 @@ export function DashboardTab({ t, rank }: DashboardTabProps) {
       </div>
 
       {/* Transactions */}
-      <SectionCard title={t('lastTransactions')} subtitle={`${mockTransactions.length} ${t('transactions')}`} icon={<DollarSign className="w-4 h-4 text-emerald-400" />}>
+      <SectionCard title={t('lastTransactions')} subtitle={`${seedTransactions.length} ${t('transactions')}`} icon={<DollarSign className="w-4 h-4 text-emerald-400" />}>
         <div className="overflow-x-auto scrollbar-thin -mx-2">
           <table className="w-full min-w-[680px]">
             <thead>

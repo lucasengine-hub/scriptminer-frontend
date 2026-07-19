@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Shield, Eye, EyeOff, Key, Save, Check, ExternalLink, Terminal, Lock, Globe, RefreshCw, Plus, Trash2, Loader2 } from 'lucide-react';
+import { Shield, Eye, EyeOff, Key, Save, Check, ExternalLink, Terminal, Lock, Globe, RefreshCw, Plus, Trash2, Loader2, Plug, Download, Cloud, MessageSquare, Video } from 'lucide-react';
 import { generateSecurityLog, initialSecurityLogs, type SecurityLogEntry } from '../lib/security';
 import { PageHeader, SectionCard, inputClass } from './ui';
 import { useProxies } from '../lib/store';
+import { downloadFile, generateVercelConfig, generateNetlifyConfig } from '../lib/exportUtils';
 
 interface SecurityTabProps {
   t: (k: string) => string;
@@ -24,6 +25,10 @@ export function SecurityTab({ t, keys, setKey }: SecurityTabProps) {
   const [rotating, setRotating] = useState(false);
   const [newIp, setNewIp] = useState('');
   const [newPort, setNewPort] = useState('8080');
+  const [whatsappKey, setWhatsappKey] = useState('');
+  const [tiktokKey, setTiktokKey] = useState('');
+  const [showDeployConfig, setShowDeployConfig] = useState(false);
+  const [deployFormat, setDeployFormat] = useState<'vercel' | 'netlify'>('vercel');
 
   // Security terminal: auto-append logs every 3-5s
   useEffect(() => {
@@ -47,8 +52,13 @@ export function SecurityTab({ t, keys, setKey }: SecurityTabProps) {
 
   const handleAddProxy = () => {
     if (!newIp) return;
-    add({ id: `px${Date.now()}`, ip: newIp, port: parseInt(newPort) || 8080, country: 'BR', status: 'active', latency: 30 + Math.floor(Math.random() * 80) });
+    add({ id: `px1784487327460`, ip: newIp, port: parseInt(newPort) || 8080, country: 'BR', status: 'active', latency: 30 + Math.floor(Math.random() * 80) });
     setNewIp(''); setNewPort('8080');
+  };
+
+  const handleDownloadDeploy = () => {
+    const content = deployFormat === 'vercel' ? generateVercelConfig() : generateNetlifyConfig();
+    downloadFile(deployFormat === 'vercel' ? 'vercel.json' : 'netlify.toml', content, 'application/json');
   };
 
   const logColors: Record<string, string> = {
@@ -133,6 +143,35 @@ export function SecurityTab({ t, keys, setKey }: SecurityTabProps) {
           </SectionCard>
         </div>
       </div>
+      {/* Plugin Integrations */}
+      <SectionCard title="Integrações de API (Plugins)" subtitle="Ganchos reativos prontos para WhatsApp Developer API e TikTok Marketing API" icon={<Plug className="w-4 h-4 text-emerald-400" />} className="mt-6">
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-medium text-muted mb-2 block flex items-center gap-1.5"><MessageSquare className="w-3.5 h-3.5 text-emerald-400" />WhatsApp Developer API Key</label>
+            <input type="password" value={whatsappKey} onChange={(e) => setWhatsappKey(e.target.value)} placeholder="whatsapp_business_access_token_..." className={`${inputClass} font-mono text-sm`} />
+            <p className="mt-1 text-[10px] text-subtle">Ative para disparar mensagens via API oficial do WhatsApp Business.</p>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted mb-2 block flex items-center gap-1.5"><Video className="w-3.5 h-3.5 text-pink-400" />TikTok Marketing API Key</label>
+            <input type="password" value={tiktokKey} onChange={(e) => setTiktokKey(e.target.value)} placeholder="tiktok_marketing_access_token_..." className={`${inputClass} font-mono text-sm`} />
+            <p className="mt-1 text-[10px] text-subtle">Ative para publicar e rastrear campanhas via TikTok Marketing API.</p>
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* Deploy Config Generator */}
+      <SectionCard title="Gerador de Configuração de Produção" subtitle="Gere vercel.json ou netlify.toml com regras SPA anti-404" icon={<Cloud className="w-4 h-4 text-blue-400" />} className="mt-6">
+        <div className="flex items-center gap-2 mb-4">
+          <button onClick={() => setDeployFormat('vercel')} className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-all ${deployFormat === 'vercel' ? 'bg-accent-500/15 text-accent-400 border-accent-500/30' : 'bg-surface-subtle text-muted border-default hover:text-primary'}`}>vercel.json</button>
+          <button onClick={() => setDeployFormat('netlify')} className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-all ${deployFormat === 'netlify' ? 'bg-accent-500/15 text-accent-400 border-accent-500/30' : 'bg-surface-subtle text-muted border-default hover:text-primary'}`}>netlify.toml</button>
+          <button onClick={() => setShowDeployConfig(!showDeployConfig)} className="inline-flex items-center gap-1.5 rounded-lg bg-surface-subtle text-muted border border-default px-3 py-2 text-xs font-semibold hover:text-primary transition-all"><Eye className="w-3.5 h-3.5" />{showDeployConfig ? 'Ocultar' : 'Visualizar'}</button>
+          <button onClick={handleDownloadDeploy} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-3 py-2 text-xs font-semibold hover:bg-emerald-500/25 transition-all"><Download className="w-3.5 h-3.5" />Download</button>
+        </div>
+        {showDeployConfig && (
+          <pre className="rounded-xl bg-black border border-default p-4 text-[10px] text-emerald-400 font-mono whitespace-pre-wrap overflow-x-auto max-h-80 overflow-y-auto">{deployFormat === 'vercel' ? generateVercelConfig() : generateNetlifyConfig()}</pre>
+        )}
+      </SectionCard>
+
       {/* Proxy Manager */}
       <SectionCard title={t('proxyManager')} subtitle={t('proxyManagerDesc')} icon={<Globe className="w-4 h-4 text-blue-400" />} className="mt-6">
         <div className="flex items-center gap-2 mb-4">

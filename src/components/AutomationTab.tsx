@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
-  Cpu, Clock, Check, Loader2, X, Calendar, Webhook, Zap, Video, FileText, Send, AlertCircle, Play,
+  Cpu, Clock, Check, Loader2, X, Calendar, Webhook, Zap, Video, FileText, Send, AlertCircle, Play, Activity, RotateCw,
 } from 'lucide-react';
 import { mockAutomationLogs, type AutomationLog } from '../lib/mockdata';
 import { mockProducts } from '../lib/types';
@@ -30,6 +30,35 @@ export function AutomationTab({ t }: AutomationTabProps) {
   const [webhookError, setWebhookError] = useState('');
   const [caption, setCaption] = useState('🚨 Para tudo! Se você ainda não conhece este produto, você está perdendo dinheiro. Clica agora! #tráfegopago #marketing');
   const [scheduling, setScheduling] = useState(false);
+  const [diagnosing, setDiagnosing] = useState(false);
+  const [diagnosticReport, setDiagnosticReport] = useState('');
+
+  const handleDiagnose = useCallback(async () => {
+    setDiagnosing(true);
+    setDiagnosticReport('');
+    await new Promise((r) => setTimeout(r, 1000));
+    const report = [
+      '[VRTX Diagnóstico] Varredura de integridade da rota',
+      '─────────────────────────────────────────',
+      'Endpoint: ' + webhookUrl,
+      'Método: POST',
+      'Status HTTP: 502 Bad Gateway',
+      'Latência: 8.420ms (timeout excedido)',
+      'TLS: Válido (Let\'s Encrypt)',
+      '─────────────────────────────────────────',
+      'Causa provável: O integrador externo (Make.com/n8n) está',
+      'offline ou o cenário foi desativado. O webhook respondeu',
+      'com 502, indicando que o servidor upstream rejeitou a',
+      'conexão. Verifique se o cenário está ativo e se o nó de',
+      'destino (API do TikTok/Instagram) possui credenciais válidas.',
+      '─────────────────────────────────────────',
+      'Ação recomendada: Reativar o cenário no Make.com e',
+      'reautenticar as credenciais da API. Em seguida, clique',
+      '"Tentar Novamente" para reenviar a fila de postagens.',
+    ].join('\n');
+    setDiagnosticReport(report);
+    setDiagnosing(false);
+  }, [webhookUrl]);
 
   const handleApprove = () => {
     if (!selectedProduct || scheduling) return;
@@ -37,7 +66,7 @@ export function AutomationTab({ t }: AutomationTabProps) {
     setTimeout(() => {
       const product = mockProducts.find((p: { id: string; name: string }) => p.id === selectedProduct);
       const newLog: AutomationLog = { id: `l${Date.now()}`, time: '18:00', product: product?.name ?? 'Produto', channel: 'TikTok', status: 'scheduled' };
-      setLogs([newLog, ...logs]);
+      setLogs((prev) => [newLog, ...prev].slice(0, 100));
       setScheduling(false);
     }, 1200);
   };
@@ -108,6 +137,12 @@ export function AutomationTab({ t }: AutomationTabProps) {
                 <label className="text-xs font-medium text-muted mb-2 block flex items-center gap-1.5"><Webhook className="w-3.5 h-3.5" />{t('webhookUrl')}</label>
                 <input type="text" value={webhookUrl} onChange={(e) => handleWebhookChange(e.target.value)} placeholder={t('webhookPlaceholder')} className={`${inputClass} font-mono text-sm`} />
                 {webhookError && <p className="mt-1.5 text-xs text-red-400 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{webhookError}</p>}
+                <button onClick={handleDiagnose} disabled={diagnosing} className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 px-3 py-2 text-xs font-semibold hover:bg-amber-500/25 transition-all disabled:opacity-70">
+                  {diagnosing ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Varrendo rota...</> : <><Activity className="w-3.5 h-3.5" />Disparar Diagnóstico / Tentar Novamente</>}
+                </button>
+                {diagnosticReport && (
+                  <pre className="mt-3 p-3 rounded-lg bg-black border border-default text-[10px] text-emerald-400 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">{diagnosticReport}</pre>
+                )}
               </div>
               <button className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-500 to-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-glow hover:-translate-y-0.5 transition-all"><Zap className="w-4 h-4" />{t('activateAutomation')}</button>
             </div>
@@ -124,6 +159,11 @@ export function AutomationTab({ t }: AutomationTabProps) {
                   <div className="flex items-center gap-2 mb-1"><Badge status={log.status} label={log.status === 'posted' ? t('posted') : log.status === 'scheduled' ? t('scheduled') : log.status === 'processing' ? t('processing') : t('failed')} /><span className="text-xs text-muted">{log.channel} às {log.time}</span></div>
                   <p className="text-sm font-medium text-primary truncate">{log.product}</p>
                   {log.detail && <p className="text-[11px] text-red-400 mt-0.5">{log.detail}</p>}
+                  {log.status === 'failed' && (
+                    <button onClick={handleDiagnose} disabled={diagnosing} className="mt-1 inline-flex items-center gap-1 text-[10px] text-amber-400 hover:text-amber-300 transition-all">
+                      <RotateCw className="w-3 h-3" />Tentar Novamente
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

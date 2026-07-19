@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Code2, FileText, Download, Flame, GitCompare, Plus, Eye, Loader2 } from 'lucide-react';
-import { SectionCard, PageHeader, Badge, Modal, Field, inputClass, CopyButton } from './ui';
-import { useWebBuilder } from '../lib/store';
+import { SectionCard, PageHeader, Badge, Modal, Field, inputClass, CopyButton, EmptyState } from './ui';
+import { useWebBuilder, useVrtxEvent, VRTX_EVENTS } from '../lib/store';
+import { generateSEOMetaTags } from '../lib/exportUtils';
 
 interface WebBuilderTabProps {
   t: (k: string) => string;
@@ -18,6 +19,13 @@ export function WebBuilderTab({ t }: WebBuilderTabProps) {
   const [exporting, setExporting] = useState(false);
 
   const project = projects.find((p) => p.id === activeProject);
+
+  // Cross-tab synergy: prefill from imported product
+  const handleImport = useCallback((payload: { productName: string; description: string; hook: string }) => {
+    setName(payload.productName);
+    setOffer(payload.hook || payload.description.slice(0, 80));
+  }, []);
+  useVrtxEvent(VRTX_EVENTS.IMPORT_PRODUCT, handleImport);
 
   const handleCreate = () => {
     if (!name || !offer) return;
@@ -43,7 +51,7 @@ export function WebBuilderTab({ t }: WebBuilderTabProps) {
         actions={<button onClick={() => setModalOpen(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500/15 text-accent-400 border border-accent-500/30 px-3 py-1.5 text-xs font-semibold hover:bg-accent-500/25 transition-all"><Plus className="w-3.5 h-3.5" />{t('newProject')}</button>}
       >
         {projects.length === 0 ? (
-          <p className="text-sm text-muted text-center py-8">Crie seu primeiro projeto de Landing Page.</p>
+          <EmptyState icon={<Code2 className="w-7 h-7 text-accent-400" />} title="Nenhum projeto criado" description="Crie sua primeira Landing Page com preview, código fonte e documentos legais gerados automaticamente." ctaLabel="Criar primeiro projeto" onCta={() => setModalOpen(true)} />
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {projects.map((p) => (
@@ -108,6 +116,11 @@ export function WebBuilderTab({ t }: WebBuilderTabProps) {
 
           {view === 'source' && (
             <div>
+              <div className="mb-3">
+                <p className="text-[10px] text-muted uppercase tracking-wide mb-2">SEO + Open Graph + JSON-LD</p>
+                <pre className="rounded-xl bg-surface-subtle border border-default p-3 text-[10px] text-emerald-400 overflow-x-auto whitespace-pre-wrap font-mono max-h-32">{generateSEOMetaTags(project.offer)}</pre>
+                <div className="mt-2"><CopyButton text={generateSEOMetaTags(project.offer)} t={t} label="Copiar SEO Tags" /></div>
+              </div>
               <pre className="rounded-xl bg-surface-subtle border border-default p-4 text-[11px] text-muted overflow-x-auto whitespace-pre-wrap font-mono">{project.html}</pre>
               <div className="mt-3"><CopyButton text={project.html} t={t} label={t('copy')} /></div>
             </div>

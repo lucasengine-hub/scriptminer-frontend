@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MousePointerClick, ShoppingCart, Wallet, Plus, Link2, Trash2, Lightbulb, Zap } from 'lucide-react';
 import { affiliateKnowledge, affiliatePalettes, type AffiliateKnowledge, type PlatformPalette } from '../lib/mockdata';
-import { CopyButton, Modal, PageHeader, SectionCard, StatCard, inputClass } from './ui';
+import { CopyButton, EmptyState, Modal, PageHeader, SectionCard, StatCard, inputClass } from './ui';
 import type { Product, AffiliateLink } from '../lib/store';
 
 interface AffiliatesTabProps {
@@ -71,7 +71,13 @@ export function AffiliatesTab({ t, products, links, onGenerateLink, onDeleteLink
         <SectionCard title={t('affiliateLinks')} subtitle={`${links.length} ${t('transactions')}`} icon={<Link2 className="w-4 h-4" style={{ color: activePlatform.color }} />}
           actions={<button onClick={() => setModalOpen(true)} className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-accent-500 to-blue-700 px-3 py-2 text-xs font-semibold text-white shadow-glow hover:-translate-y-0.5 transition-all"><Plus className="w-3.5 h-3.5" />{t('newLink')}</button>}>
           {links.length === 0 ? (
-            <p className="text-sm text-muted text-center py-8">{t('noHistory')}</p>
+            <EmptyState
+              icon={<Link2 className="w-7 h-7 text-accent-400" />}
+              title="Nenhum link gerado ainda"
+              description="Crie seu primeiro link de afiliado e comece a rastrear cliques, conversões e comissões em tempo real."
+              ctaLabel="Criar primeiro link"
+              onCta={() => setModalOpen(true)}
+            />
           ) : (
             <div className="overflow-x-auto scrollbar-thin -mx-2">
               <table className="w-full min-w-[680px]">

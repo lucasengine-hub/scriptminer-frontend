@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { KanbanSquare, Plus, Video, User, ArrowRight } from 'lucide-react';
 import { SectionCard, PageHeader, Modal, Field, inputClass } from './ui';
-import { useKanban } from '../lib/store';
+import { useKanban, useVrtxEvent, VRTX_EVENTS } from '../lib/store';
 
 interface KanbanTabProps {
   t: (k: string) => string;
@@ -13,6 +13,12 @@ export function KanbanTab({ t }: KanbanTabProps) {
   const [title, setTitle] = useState('');
   const [type, setType] = useState<'video' | 'lead'>('video');
   const [meta, setMeta] = useState('');
+
+  // Cross-tab synergy: auto-create card when Studio finishes rendering
+  const handleStudioRendered = useCallback((payload: { title: string; type: 'video' | 'lead'; meta: string }) => {
+    addCard({ title: payload.title, type: payload.type, meta: payload.meta });
+  }, [addCard]);
+  useVrtxEvent(VRTX_EVENTS.STUDIO_RENDERED, handleStudioRendered);
 
   const columns: { id: 'idea' | 'process' | 'done'; label: string; color: string }[] = [
     { id: 'idea', label: t('colIdea'), color: 'border-blue-500/40' },

@@ -79,6 +79,7 @@ export function VRTXClassTab({ t }: VRTXClassTabProps) {
           <div className="mt-5 flex items-center gap-2">
             <code className="flex-1 text-[11px] text-muted bg-surface px-3 py-2 rounded-lg border border-default truncate">{activeCourse.studentLink}</code>
             <CopyButton text={activeCourse.studentLink} t={t} label={t('generateStudentLink')} />
+            <CopyButton text={JSON.stringify({ courseName: activeCourse.courseName, modules: activeCourse.modules, studentLink: activeCourse.studentLink }, null, 2)} t={t} label="Backup JSON" />
           </div>
         </SectionCard>
       )}

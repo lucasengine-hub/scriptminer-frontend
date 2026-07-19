@@ -247,3 +247,20 @@ export function RankBadge({ level, name }: { level: number; name: string }) {
     </span>
   );
 }
+
+export function EmptyState({ icon, title, description, ctaLabel, onCta }: { icon: React.ReactNode; title: string; description: string; ctaLabel?: string; onCta?: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 px-6 text-center animate-fade-in-up">
+      <div className="w-16 h-16 rounded-2xl bg-accent-500/10 border border-accent-500/30 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(59,130,246,0.15)]">
+        {icon}
+      </div>
+      <h3 className="text-base font-semibold text-primary mb-1.5">{title}</h3>
+      <p className="text-sm text-muted max-w-sm mb-5">{description}</p>
+      {ctaLabel && onCta && (
+        <button onClick={onCta} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent-500 to-blue-700 px-5 py-2.5 text-sm font-semibold text-white shadow-glow hover:-translate-y-0.5 transition-all">
+          {ctaLabel}
+        </button>
+      )}
+    </div>
+  );
+}

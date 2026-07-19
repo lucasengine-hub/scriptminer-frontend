@@ -28,6 +28,7 @@ import { translations } from './lib/i18n';
 import {
   useTheme, useLanguage, useUser, useScriptHistory, useProducts, useAffiliateLinks,
   useApiKeys, useAdminUsers, getRankInfo, type UserState, type RankInfo,
+  vrtxEmit, VRTX_EVENTS,
 } from './lib/store';
 
 export default function App() {
@@ -71,6 +72,8 @@ export default function App() {
   const handleImportProduct = (productName: string, description: string, hook: string) => {
     setPrefillData({ productName, description, hook });
     setActiveTab('mining');
+    // Cross-tab synergy: notify Web Builder to prefill
+    vrtxEmit(VRTX_EVENTS.IMPORT_PRODUCT, { productName, description, hook });
   };
 
   if (!user.isLoggedIn) {
@@ -248,7 +251,7 @@ function VrtxCoreEngineAdmin(props: CoreEngineProps) {
           <div className="max-w-7xl mx-auto text-center text-xs text-amber-400/70">{t('appName')} — {t('coreOperator')} Engine Core</div>
         </footer>
       </div>
-      <Chatbot t={t} />
+      <Chatbot t={t} currentTab={activeTab} creditsBalance={user.credits} isAdmin={user.isAdmin} />
     </div>
   );
 }
@@ -334,7 +337,7 @@ function VrtxPublicApplication(props: PublicAppProps) {
           <div className="max-w-7xl mx-auto text-center text-xs text-muted">{t('appName')} — {t('enterpriseEdition')}</div>
         </footer>
       </div>
-      <Chatbot t={t} />
+      <Chatbot t={t} currentTab={activeTab} creditsBalance={user.credits} isAdmin={user.isAdmin} />
     </div>
   );
 }

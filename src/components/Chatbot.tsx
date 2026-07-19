@@ -23,21 +23,34 @@ function getBotResponse(text: string): string {
 
 interface ChatbotProps {
   t: (k: string) => string;
+  currentTab?: string;
+  creditsBalance?: number;
+  isAdmin?: boolean;
 }
 
-export function Chatbot({ t }: ChatbotProps) {
+export function Chatbot({ t, currentTab = 'dashboard', creditsBalance = 999, isAdmin = false }: ChatbotProps) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  const getContextGreeting = () => {
+    if (currentTab === 'webBuilder') return '[VRTX_AI] Vejo que estás a estruturar uma Landing Page de alta conversão neste momento. Queres que analise a psicologia da tua oferta principal?';
+    if (currentTab === 'studio') return '[VRTX_AI] Estás no VRTX Studio! Posso sugerir melhorias de retenção para o teu vídeo. Qual o nicho do teu criativo?';
+    if (currentTab === 'mining') return '[VRTX_AI] Geração de Roteiros ativa. Diga-me o produto e eu ajudo a estruturar o gancho dos primeiros 3 segundos.';
+    if (currentTab === 'pay') return '[VRTX_AI] No VRTX Pay! Posso ajudar a otimizar o teu Order Bump para aumentar o ticket médio.';
+    if (currentTab === 'mail') return '[VRTX_AI] Mail & Social CRM aberto. Queres que eu escreva um copy de recuperação de carrinho de alta conversão?';
+    if (!isAdmin && creditsBalance < 50) return t('chatbotGreeting') + ' \n\n⚠️ Atenção: tens apenas ' + creditsBalance + ' créditos restantes. Sugiro otimizar as automações ou recarregar créditos no Billing Desk para evitar pausas na operação.';
+    return t('chatbotGreeting');
+  };
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 'init', role: 'bot', text: t('chatbotGreeting') },
+    { id: 'init', role: 'bot', text: getContextGreeting() },
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Update greeting when language changes
   useEffect(() => {
-    setMessages((prev) => prev.map((m) => m.id === 'init' ? { ...m, text: t('chatbotGreeting') } : m));
-  }, [t]);
+    setMessages((prev) => prev.map((m) => m.id === 'init' ? { ...m, text: getContextGreeting() } : m));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t, currentTab, creditsBalance, isAdmin]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

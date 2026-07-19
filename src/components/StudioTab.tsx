@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Film, Music, Captions, Mic, Globe, Play, Upload, Loader2, Sparkles, Wand2, Pause, Volume2, Maximize2 } from 'lucide-react';
 import { SectionCard, PageHeader, Badge, CopyButton } from './ui';
+import { vrtxEmit, VRTX_EVENTS } from '../lib/store';
 
 interface StudioTabProps {
   t: (k: string) => string;
@@ -105,6 +106,12 @@ export function StudioTab({ t, consumeCredits, addRankPoints, isAdmin, isGodMode
         setRenderComplete(true);
         if (!isAdmin && !isGodMode) consumeCredits(RENDER_COST);
         addRankPoints(5);
+        // Cross-tab synergy: notify Kanban to create a card
+        vrtxEmit(VRTX_EVENTS.STUDIO_RENDERED, {
+          title: `Vídeo Renderizado — ${new Date().toLocaleDateString('pt-BR')}`,
+          type: 'video' as const,
+          meta: `Studio · 1080×1920 · ${DUB_LANGS.find((l) => l.code === dubLang)?.label ?? 'PT'}`,
+        });
       }
     }, 50);
   };

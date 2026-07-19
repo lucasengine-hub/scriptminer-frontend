@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
-import { Send, Loader2, Terminal, MessageSquare, Users } from 'lucide-react';
+import { Send, Loader2, Terminal, MessageSquare, Users, Download } from 'lucide-react';
 import { PageHeader, SectionCard, inputClass } from './ui';
+import { downloadFile, toCSV } from '../lib/exportUtils';
 
 interface MassSenderTabProps {
   t: (k: string) => string;
@@ -55,7 +56,7 @@ export function MassSenderTab({ t }: MassSenderTabProps) {
         text: `[${new Date().toTimeString().slice(0, 8)}] Lote ${b}/${batches}: ${sent} mensagens enviadas (${Math.round((b / batches) * 100)}%)`,
         type: b === batches ? 'success' : 'info',
       };
-      setLogs((prev) => [...prev, entry]);
+      setLogs((prev) => [...prev.slice(-99), entry]);
       scrollToBottom();
     }
 
@@ -64,7 +65,7 @@ export function MassSenderTab({ t }: MassSenderTabProps) {
       text: `[${new Date().toTimeString().slice(0, 8)}] Disparo concluído! ${totalContacts} mensagens entregues. Taxa de entrega: 98.4%`,
       type: 'success',
     };
-    setLogs((prev) => [...prev, finalEntry]);
+    setLogs((prev) => [...prev.slice(-99), finalEntry]);
     setDispatching(false);
     scrollToBottom();
   };
@@ -91,6 +92,7 @@ export function MassSenderTab({ t }: MassSenderTabProps) {
             <button onClick={startDispatch} disabled={!message.trim() || dispatching} className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-500 to-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-glow hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
               {dispatching ? <><Loader2 className="w-4 h-4 animate-spin" />{t('dispatching')}</> : <><Send className="w-4 h-4" />{t('startDispatch')}</>}
             </button>
+            <button onClick={() => { const csv = toCSV(['Canal', 'Total Contatos', 'Taxa Entrega'], [[channel === 'whatsapp' ? 'WhatsApp' : 'Facebook Groups', String(channel === 'whatsapp' ? 1247 : 384), '98.4%']]); downloadFile('vrtx-disparo-contatos.csv', csv, 'text/csv'); }} disabled={dispatching} className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-surface-subtle border border-default px-5 py-2.5 text-sm font-medium text-muted hover:text-primary hover:border-strong transition-all disabled:opacity-50"><Download className="w-4 h-4" />Exportar Contatos CSV</button>
           </div>
         </SectionCard>
 

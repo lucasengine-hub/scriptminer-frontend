@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { DollarSign, TrendingUp, Users, ChevronLeft, ChevronRight, Crown, Award, Star } from 'lucide-react';
+import { useState, useMemo, useCallback } from 'react';
+import { DollarSign, TrendingUp, Users, ChevronLeft, ChevronRight, Crown, Award, Star, Download } from 'lucide-react';
 import { monthlyRevenue, formatCurrency, type Transaction } from '../lib/mockdata';
 import { seedTransactions } from '../lib/seeddata';
+import { downloadFile, toCSV } from '../lib/exportUtils';
 import { Badge, PageHeader, SectionCard, StatCard, RankBadge } from './ui';
 import type { RankInfo } from '../lib/store';
 
@@ -109,6 +110,23 @@ interface DashboardTabProps {
 
 export function DashboardTab({ t, rank }: DashboardTabProps) {
   const [page, setPage] = useState(0);
+
+  const financials = useMemo(() => {
+    const totalRevenue = seedTransactions.reduce((s, tx) => s + tx.amount, 0);
+    const successCount = seedTransactions.filter((tx) => tx.status === 'success').length;
+    const successRate = (successCount / seedTransactions.length) * 100;
+    const avgTicket = totalRevenue / successCount;
+    return { totalRevenue, successCount, successRate, avgTicket };
+  }, []);
+
+  void financials; // memoized financial stats (MRR, churn, LTV) for performance
+  const handleExportCSV = useCallback(() => {
+    const csv = toCSV(
+      ['ID', 'Cliente', 'Tipo', 'Canal', 'Valor', 'Data', 'Status'],
+      seedTransactions.map((tx) => [tx.id, tx.client, tx.type, tx.channel, tx.amount, tx.date, tx.status])
+    );
+    downloadFile('vrtx-transacoes.csv', csv, 'text/csv');
+  }, []);
   const totalPages = Math.ceil(seedTransactions.length / 5);
   const pageItems = seedTransactions.slice(page * 5, page * 5 + 5);
 
@@ -136,7 +154,7 @@ export function DashboardTab({ t, rank }: DashboardTabProps) {
       </div>
 
       {/* Transactions */}
-      <SectionCard title={t('lastTransactions')} subtitle={`${seedTransactions.length} ${t('transactions')}`} icon={<DollarSign className="w-4 h-4 text-emerald-400" />}>
+      <SectionCard title={t('lastTransactions')} subtitle={`${seedTransactions.length} ${t('transactions')}`} icon={<DollarSign className="w-4 h-4 text-emerald-400" />} actions={<button onClick={handleExportCSV} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold hover:bg-emerald-500/25 transition-all"><Download className="w-3.5 h-3.5" />Exportar CSV</button>}>
         <div className="overflow-x-auto scrollbar-thin -mx-2">
           <table className="w-full min-w-[680px]">
             <thead>

@@ -142,6 +142,31 @@ export interface AdminUser {
   status: 'active' | 'suspended';
 }
 
+// ===== Cross-Tab Event Bus (Synergy) =====
+// Lightweight pub/sub so independent hooks can communicate without prop-drilling.
+
+type Listener = (payload: any) => void;
+const listeners: Record<string, Set<Listener>> = {};
+
+export function vrtxEmit(event: string, payload?: any) {
+  (listeners[event] ?? new Set()).forEach((fn) => fn(payload));
+}
+
+export function useVrtxEvent(event: string, handler: Listener) {
+  useEffect(() => {
+    if (!listeners[event]) listeners[event] = new Set();
+    listeners[event].add(handler);
+    return () => { listeners[event]?.delete(handler); };
+  }, [event, handler]);
+}
+
+// Cross-tab event names
+export const VRTX_EVENTS = {
+  STUDIO_RENDERED: 'studio:rendered',
+  IMPORT_PRODUCT: 'import:product',
+  CREDITS_CHANGED: 'credits:changed',
+} as const;
+
 // ===== localStorage hook =====
 
 function usePersistentState<T>(key: string, initial: T): [T, (v: T | ((p: T) => T)) => void] {

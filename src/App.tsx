@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Menu, Sparkles, Crown, ShieldCheck } from 'lucide-react';
+import { Menu, Sparkles, Crown, ShieldCheck, Zap } from 'lucide-react';
 import { Sidebar, type TabId } from './components/Sidebar';
 import { LoginScreen } from './components/LoginScreen';
 import { DashboardTab } from './components/DashboardTab';
@@ -15,6 +15,14 @@ import { SubscriptionTab } from './components/SubscriptionTab';
 import { SecurityTab } from './components/SecurityTab';
 import { AdminTab } from './components/AdminTab';
 import { Chatbot } from './components/Chatbot';
+import { StudioTab } from './components/StudioTab';
+import { MarketplaceTab } from './components/MarketplaceTab';
+import { VRTXPayTab } from './components/VRTXPayTab';
+import { VRTXClassTab } from './components/VRTXClassTab';
+import { MailCRMTab } from './components/MailCRMTab';
+import { WebBuilderTab } from './components/WebBuilderTab';
+import { KanbanTab } from './components/KanbanTab';
+import { CoreControlTab } from './components/CoreControlTab';
 import { LanguageSwitcher, ThemeToggle, RankBadge } from './components/ui';
 import { translations } from './lib/i18n';
 import {
@@ -39,7 +47,7 @@ export default function App() {
 
   const rank = getRankInfo(user.rankPoints, t);
 
-  const handleLogin = (email: string) => login(email);
+  const handleLogin = (email: string, token?: string) => login(email, token);
 
   const handleGenerateScript = (productName: string, style: string, output: string, niche: string) => {
     addRecord({ id: `s${Date.now()}`, productName, style, output, createdAt: Date.now(), favorite: false, niche });
@@ -55,7 +63,7 @@ export default function App() {
     const code = `AFIL-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
     addLink({
       id: `a${Date.now()}`, productId, productName: product.name, code,
-      url: `https://vrtx.app/af/${code.toLowerCase().replace('afil-', '')}`,
+      url: `${window.location.origin}/af/${code.toLowerCase().replace('afil-', '')}`,
       clicks: 0, conversions: 0, commissionRate, role, platform,
     });
   };
@@ -73,7 +81,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex">
-      <Sidebar active={activeTab} onChange={setActiveTab} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} t={t} isAdmin={user.isAdmin} userRank={rank} userName={userName} />
+      <Sidebar active={activeTab} onChange={setActiveTab} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} t={t} isAdmin={user.isAdmin} isGodMode={user.isGodMode} userRank={rank} userName={userName} />
 
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Topbar */}
@@ -87,8 +95,15 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* God-Mode badge */}
+            {user.isGodMode && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-500/20 to-red-500/20 text-amber-400 border border-amber-500/40 shadow-[0_0_16px_rgba(251,191,36,0.3)]">
+                <Zap className="w-3.5 h-3.5" />
+                {t('coreOperator')}
+              </span>
+            )}
             {/* Admin badge */}
-            {user.isAdmin && (
+            {user.isAdmin && !user.isGodMode && (
               <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-500/15 to-red-500/15 text-amber-400 border border-amber-500/30">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 {t('adminBadge')}
@@ -99,8 +114,8 @@ export default function App() {
             {/* Credits indicator */}
             <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg surface-subtle border border-default">
               <Crown className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-xs font-bold text-primary">{user.isAdmin ? '∞' : user.credits}</span>
-              <span className="text-[10px] text-muted">/ {user.isAdmin ? '∞' : user.maxCredits}</span>
+              <span className="text-xs font-bold text-primary">{user.isAdmin || user.isGodMode ? '∞' : user.credits}</span>
+              <span className="text-[10px] text-muted">/ {user.isAdmin || user.isGodMode ? '∞' : user.maxCredits}</span>
             </div>
             <LanguageSwitcher lang={lang} onChange={changeLang} t={t} />
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
@@ -126,6 +141,13 @@ export default function App() {
             />
           )}
           {activeTab === 'ebook' && <EbookTab t={t} consumeCredits={consumeCredits} addRankPoints={addRankPoints} isAdmin={user.isAdmin} />}
+          {activeTab === 'studio' && <StudioTab t={t} />}
+          {activeTab === 'marketplace' && <MarketplaceTab t={t} userEmail={user.email} />}
+          {activeTab === 'pay' && <VRTXPayTab t={t} />}
+          {activeTab === 'class' && <VRTXClassTab t={t} />}
+          {activeTab === 'mail' && <MailCRMTab t={t} />}
+          {activeTab === 'webBuilder' && <WebBuilderTab t={t} />}
+          {activeTab === 'kanban' && <KanbanTab t={t} />}
           {activeTab === 'dropshipping' && <DropshippingTab t={t} onImportProduct={handleImportProduct} consumeCredits={consumeCredits} addRankPoints={addRankPoints} isAdmin={user.isAdmin} />}
           {activeTab === 'landingBuilder' && <LandingBuilderTab t={t} />}
           {activeTab === 'traffic' && <TrafficTab t={t} />}
@@ -146,6 +168,7 @@ export default function App() {
           {activeTab === 'subscription' && <SubscriptionTab t={t} user={user} addCredits={addCredits} />}
           {activeTab === 'security' && <SecurityTab t={t} keys={keys} setKey={setKey} />}
           {activeTab === 'admin' && user.isAdmin && <AdminTab t={t} users={adminUsers} onInjectCredits={injectCredits} />}
+          {activeTab === 'coreControl' && user.isGodMode && <CoreControlTab t={t} />}
         </main>
 
         <footer className="border-t border-default px-4 sm:px-6 lg:px-8 py-5">

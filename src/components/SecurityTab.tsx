@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Shield, Eye, EyeOff, Key, Save, Check, ExternalLink, Terminal, Lock } from 'lucide-react';
+import { Shield, Eye, EyeOff, Key, Save, Check, ExternalLink, Terminal, Lock, Globe, RefreshCw, Plus, Trash2, Loader2 } from 'lucide-react';
 import { generateSecurityLog, initialSecurityLogs, type SecurityLogEntry } from '../lib/security';
 import { PageHeader, SectionCard, inputClass } from './ui';
+import { useProxies } from '../lib/store';
 
 interface SecurityTabProps {
   t: (k: string) => string;
@@ -19,6 +20,10 @@ export function SecurityTab({ t, keys, setKey }: SecurityTabProps) {
   const [visible, setVisible] = useState<Record<string, boolean>>({ openai: false, gemini: false, tiktok: false });
   const [saved, setSaved] = useState(false);
   const [logs, setLogs] = useState<SecurityLogEntry[]>(initialSecurityLogs);
+  const { proxies, rotate, add, remove } = useProxies();
+  const [rotating, setRotating] = useState(false);
+  const [newIp, setNewIp] = useState('');
+  const [newPort, setNewPort] = useState('8080');
 
   // Security terminal: auto-append logs every 3-5s
   useEffect(() => {
@@ -31,6 +36,19 @@ export function SecurityTab({ t, keys, setKey }: SecurityTabProps) {
   const handleSave = () => {
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
+  };
+
+  const handleRotate = async () => {
+    setRotating(true);
+    await new Promise((r) => setTimeout(r, 1200));
+    rotate();
+    setRotating(false);
+  };
+
+  const handleAddProxy = () => {
+    if (!newIp) return;
+    add({ id: `px${Date.now()}`, ip: newIp, port: parseInt(newPort) || 8080, country: 'BR', status: 'active', latency: 30 + Math.floor(Math.random() * 80) });
+    setNewIp(''); setNewPort('8080');
   };
 
   const logColors: Record<string, string> = {
@@ -115,6 +133,30 @@ export function SecurityTab({ t, keys, setKey }: SecurityTabProps) {
           </SectionCard>
         </div>
       </div>
+      {/* Proxy Manager */}
+      <SectionCard title={t('proxyManager')} subtitle={t('proxyManagerDesc')} icon={<Globe className="w-4 h-4 text-blue-400" />} className="mt-6">
+        <div className="flex items-center gap-2 mb-4">
+          <button onClick={handleRotate} disabled={rotating} className="inline-flex items-center gap-1.5 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 px-3 py-2 text-xs font-semibold hover:bg-blue-500/25 transition-all disabled:opacity-70">
+            {rotating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}{t('rotateProxies')}
+          </button>
+          <div className="flex items-center gap-1.5 flex-1">
+            <input value={newIp} onChange={(e) => setNewIp(e.target.value)} placeholder="189.45.12.8" className={`${inputClass} py-2 text-xs`} />
+            <input value={newPort} onChange={(e) => setNewPort(e.target.value)} placeholder="8080" className={`${inputClass} py-2 text-xs w-20`} />
+            <button onClick={handleAddProxy} className="inline-flex items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 p-2 hover:bg-emerald-500/25 transition-all"><Plus className="w-3.5 h-3.5" /></button>
+          </div>
+        </div>
+        <div className="space-y-2">
+          {proxies.map((p) => (
+            <div key={p.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-subtle border border-default">
+              <Globe className="w-4 h-4 text-blue-400 shrink-0" />
+              <code className="text-xs text-primary font-mono flex-1 truncate">{p.ip}:{p.port}</code>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${p.status === 'active' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'}`}>{p.status}</span>
+              <span className="text-[10px] text-muted">{p.latency}ms</span>
+              <button onClick={() => remove(p.id)} className="p-1 rounded text-muted hover:text-red-400 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
+            </div>
+          ))}
+        </div>
+      </SectionCard>
     </div>
   );
 }

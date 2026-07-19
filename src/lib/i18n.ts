@@ -319,6 +319,118 @@ export interface Dict {
   theme: string;
   darkMode: string;
   lightMode: string;
+  // New modules
+  catStudio: string;
+  catMonopoly: string;
+  navStudio: string;
+  navMarketplace: string;
+  navPay: string;
+  navClass: string;
+  navMail: string;
+  navWebBuilder: string;
+  navKanban: string;
+  navCoreControl: string;
+  // Login token
+  connectionToken: string;
+  tokenPlaceholder: string;
+  planFree: string;
+  planStandard: string;
+  planBlackLabel: string;
+  planFreeDesc: string;
+  planStandardDesc: string;
+  planBlackDesc: string;
+  // Workspace
+  workspace: string;
+  personalWorkspace: string;
+  agencyWorkspace: string;
+  // Proxy
+  proxyManager: string;
+  proxyManagerDesc: string;
+  rotateProxies: string;
+  rotating: string;
+  addProxy: string;
+  // Studio
+  studioTitle: string;
+  studioSubtitle: string;
+  studioEditor: string;
+  trackVideo: string;
+  trackAudio: string;
+  trackSubtitle: string;
+  cloneVoice: string;
+  cloningVoice: string;
+  autoDub: string;
+  dubbingTo: string;
+  renderPreview: string;
+  rendering: string;
+  uploadAudio: string;
+  // Marketplace
+  marketplaceTitle: string;
+  marketplaceSubtitle: string;
+  listProduct: string;
+  affiliateNow: string;
+  // VRTX Pay
+  payTitle: string;
+  paySubtitle: string;
+  createOffer: string;
+  offerName: string;
+  orderBump: string;
+  bumpPrice: string;
+  generatePayLink: string;
+  dunningManagement: string;
+  recoverPayment: string;
+  // VRTX Class
+  classTitle: string;
+  classSubtitle: string;
+  createCourse: string;
+  courseName: string;
+  addModule: string;
+  moduleTitle: string;
+  generateStudentLink: string;
+  moveUp: string;
+  moveDown: string;
+  // Mail CRM
+  mailTitle: string;
+  mailSubtitle: string;
+  emailFunnel: string;
+  funnelSteps: string;
+  trigger: string;
+  delay: string;
+  subject: string;
+  emailCopy: string;
+  generateEmailCopy: string;
+  socialCRM: string;
+  socialCRMSubtitle: string;
+  triggerKeyword: string;
+  dmTemplate: string;
+  dmDelay: string;
+  // Web Builder
+  webBuilderTitle: string;
+  webBuilderSubtitle: string;
+  sourceCode: string;
+  legalGenerator: string;
+  privacyPolicy: string;
+  termsOfUse: string;
+  exportZip: string;
+  heatmap: string;
+  abTest: string;
+  variantA: string;
+  variantB: string;
+  // Kanban
+  kanbanTitle: string;
+  kanbanSubtitle: string;
+  colIdea: string;
+  colProcess: string;
+  colDone: string;
+  addCard: string;
+  cardTitle: string;
+  // Core Control
+  coreControlTitle: string;
+  coreControlSubtitle: string;
+  mrrGlobal: string;
+  churnRate: string;
+  ltv: string;
+  batchInject: string;
+  coreOperator: string;
 }
 
 export const translations: Record<Lang, Dict> = {
@@ -505,6 +617,33 @@ export const translations: Record<Lang, Dict> = {
     chatbotPlaceholder: 'Digite sua mensagem...',
     chatbotTyping: 'VRTX_AI está digitando...',
     language: 'Idioma', theme: 'Tema', darkMode: 'Dark Mode', lightMode: 'Light Mode',
+    catStudio: 'Studio & Criativo', catMonopoly: 'Monopólio VRTX',
+  navStudio: 'VRTX Studio & Dublagem', navMarketplace: 'Marketplace Interno', navPay: 'VRTX Pay', navClass: 'VRTX Class',
+  navMail: 'Mail & Social CRM', navWebBuilder: 'Web Builder & Legal', navKanban: 'Kanban Pipeline', navCoreControl: 'Core Control',
+  connectionToken: 'Token de Conexão', tokenPlaceholder: 'Ex: VRTX-CORE-MASTER-2026',
+  planFree: 'Free Trial', planStandard: 'Standard', planBlackLabel: 'Black',
+  planFreeDesc: '10 créditos para testar', planStandardDesc: 'Plano profissional $97/mês', planBlackDesc: 'Tudo ilimitado $997/mês',
+  workspace: 'Workspace', personalWorkspace: 'Pessoal', agencyWorkspace: 'Agência',
+  proxyManager: 'Escudo Anti-Ban (Proxy Manager)', proxyManagerDesc: 'Rotação de IPs residenciais para blindar contas.',
+  rotateProxies: 'Rotacionar IPs', rotating: 'Rotacionando...', addProxy: 'Adicionar Proxy',
+  studioTitle: 'VRTX Studio & Dublagem Global', studioSubtitle: 'Editor in-browser estilo CapCut + clonagem de voz + dublagem IA.',
+  studioEditor: 'Studio Editor', trackVideo: 'Faixa Vídeo', trackAudio: 'Faixa Áudio', trackSubtitle: 'Faixa Legenda',
+  cloneVoice: 'Clonar Voz', cloningVoice: 'Clonando voz...', autoDub: 'Dublagem IA Automática', dubbingTo: 'Dublando para', renderPreview: 'Renderizar Preview', rendering: 'Renderizando...', uploadAudio: 'Upload de Áudio',
+  marketplaceTitle: 'VRTX Internal Marketplace', marketplaceSubtitle: 'Ecossistema fechado: liste e afilie produtos VRTX com 1 clique.',
+  listProduct: 'Listar Produto', affiliateNow: 'Afiliar Agora',
+  payTitle: 'VRTX Pay', paySubtitle: 'Checkout nativo com Order Bump e recuperação de Dunning.',
+  createOffer: 'Criar Oferta', offerName: 'Nome da Oferta', orderBump: 'Order Bump', bumpPrice: 'Preço do Bump', generatePayLink: 'Gerar Link de Pagamento', dunningManagement: 'Gestão de Dunning', recoverPayment: 'Recuperar Pagamento',
+  classTitle: 'VRTX Class', classSubtitle: 'Hospedagem de cursos com módulos drag & drop.',
+  createCourse: 'Criar Curso', courseName: 'Nome do Curso', addModule: 'Adicionar Módulo', moduleTitle: 'Título do Módulo', generateStudentLink: 'Gerar Link de Alunos', moveUp: 'Subir', moveDown: 'Descer',
+  mailTitle: 'VRTX Mail & Social CRM', mailSubtitle: 'Funis de email marketing e automação social.',
+  emailFunnel: 'Funil de Email', funnelSteps: 'Etapas do Funil', trigger: 'Gatilho', delay: 'Delay', subject: 'Assunto', emailCopy: 'Copy do Email', generateEmailCopy: 'Gerar Copy via IA',
+  socialCRM: 'Social CRM', socialCRMSubtitle: 'Conexão Instagram/TikTok com disparo automático de DM.', triggerKeyword: 'Palavra-Gatilho', dmTemplate: 'Template da DM', dmDelay: 'Delay da DM (min)',
+  webBuilderTitle: 'VRTX Web Builder & Legal Generator', webBuilderSubtitle: 'Gere Landing Pages com preview, código fonte e documentos legais.',
+  sourceCode: 'Source Code', legalGenerator: 'Gerador Legal', privacyPolicy: 'Política de Privacidade', termsOfUse: 'Termos de Uso', exportZip: 'Exportar .zip', heatmap: 'Heatmap', abTest: 'Teste A/B', variantA: 'Variante A (Dor)', variantB: 'Variante B (Benefício)',
+  kanbanTitle: 'Sales & Content Kanban', kanbanSubtitle: 'Arraste cards de vídeos e leads entre colunas.',
+  colIdea: 'Ideia/Lead', colProcess: 'Em Processo', colDone: 'Fechado/Postado', addCard: 'Adicionar Card', cardTitle: 'Título do Card',
+  coreControlTitle: 'Core Control', coreControlSubtitle: 'Métricas globais do sistema e injeção de créditos em lote.',
+  mrrGlobal: 'MRR Global', churnRate: 'Churn Rate', ltv: 'LTV', batchInject: 'Injeção em Lote', coreOperator: 'CORE OPERATOR',
   },
   en: {
     appName: 'VRTX',
@@ -682,6 +821,33 @@ export const translations: Record<Lang, Dict> = {
     chatbotPlaceholder: 'Type your message...',
     chatbotTyping: 'VRTX_AI is typing...',
     language: 'Language', theme: 'Theme', darkMode: 'Dark Mode', lightMode: 'Light Mode',
+    catStudio: 'Studio & Creative', catMonopoly: 'VRTX Monopoly',
+  navStudio: 'VRTX Studio & Dubbing', navMarketplace: 'Internal Marketplace', navPay: 'VRTX Pay', navClass: 'VRTX Class',
+  navMail: 'Mail & Social CRM', navWebBuilder: 'Web Builder & Legal', navKanban: 'Kanban Pipeline', navCoreControl: 'Core Control',
+  connectionToken: 'Connection Token', tokenPlaceholder: 'Ex: VRTX-CORE-MASTER-2026',
+  planFree: 'Free Trial', planStandard: 'Standard', planBlackLabel: 'Black',
+  planFreeDesc: '10 credits to test', planStandardDesc: 'Professional plan $97/mo', planBlackDesc: 'Everything unlimited $997/mo',
+  workspace: 'Workspace', personalWorkspace: 'Personal', agencyWorkspace: 'Agency',
+  proxyManager: 'Anti-Ban Shield (Proxy Manager)', proxyManagerDesc: 'Residential IP rotation to shield ad accounts.',
+  rotateProxies: 'Rotate IPs', rotating: 'Rotating...', addProxy: 'Add Proxy',
+  studioTitle: 'VRTX Studio & Global Dubbing', studioSubtitle: 'In-browser CapCut-style editor + voice cloning + AI dubbing.',
+  studioEditor: 'Studio Editor', trackVideo: 'Video Track', trackAudio: 'Audio Track', trackSubtitle: 'Subtitle Track',
+  cloneVoice: 'Clone Voice', cloningVoice: 'Cloning voice...', autoDub: 'Auto AI Dubbing', dubbingTo: 'Dubbing to', renderPreview: 'Render Preview', rendering: 'Rendering...', uploadAudio: 'Upload Audio',
+  marketplaceTitle: 'VRTX Internal Marketplace', marketplaceSubtitle: 'Closed ecosystem: list and affiliate VRTX products with 1 click.',
+  listProduct: 'List Product', affiliateNow: 'Affiliate Now',
+  payTitle: 'VRTX Pay', paySubtitle: 'Native checkout with Order Bump and Dunning recovery.',
+  createOffer: 'Create Offer', offerName: 'Offer Name', orderBump: 'Order Bump', bumpPrice: 'Bump Price', generatePayLink: 'Generate Payment Link', dunningManagement: 'Dunning Management', recoverPayment: 'Recover Payment',
+  classTitle: 'VRTX Class', classSubtitle: 'Course hosting with drag & drop modules.',
+  createCourse: 'Create Course', courseName: 'Course Name', addModule: 'Add Module', moduleTitle: 'Module Title', generateStudentLink: 'Generate Student Link', moveUp: 'Move Up', moveDown: 'Move Down',
+  mailTitle: 'VRTX Mail & Social CRM', mailSubtitle: 'Email marketing funnels and social automation.',
+  emailFunnel: 'Email Funnel', funnelSteps: 'Funnel Steps', trigger: 'Trigger', delay: 'Delay', subject: 'Subject', emailCopy: 'Email Copy', generateEmailCopy: 'Generate Copy via AI',
+  socialCRM: 'Social CRM', socialCRMSubtitle: 'Instagram/TikTok connection with automatic DM dispatch.', triggerKeyword: 'Trigger Keyword', dmTemplate: 'DM Template', dmDelay: 'DM Delay (min)',
+  webBuilderTitle: 'VRTX Web Builder & Legal Generator', webBuilderSubtitle: 'Generate Landing Pages with preview, source code and legal docs.',
+  sourceCode: 'Source Code', legalGenerator: 'Legal Generator', privacyPolicy: 'Privacy Policy', termsOfUse: 'Terms of Use', exportZip: 'Export .zip', heatmap: 'Heatmap', abTest: 'A/B Test', variantA: 'Variant A (Pain)', variantB: 'Variant B (Benefit)',
+  kanbanTitle: 'Sales & Content Kanban', kanbanSubtitle: 'Drag video and lead cards between columns.',
+  colIdea: 'Idea/Lead', colProcess: 'In Process', colDone: 'Closed/Posted', addCard: 'Add Card', cardTitle: 'Card Title',
+  coreControlTitle: 'Core Control', coreControlSubtitle: 'Global system metrics and batch credit injection.',
+  mrrGlobal: 'Global MRR', churnRate: 'Churn Rate', ltv: 'LTV', batchInject: 'Batch Inject', coreOperator: 'CORE OPERATOR',
   },
   es: {
     appName: 'VRTX',
@@ -859,5 +1025,32 @@ export const translations: Record<Lang, Dict> = {
     chatbotPlaceholder: 'Escribe tu mensaje...',
     chatbotTyping: 'VRTX_AI está escribiendo...',
     language: 'Idioma', theme: 'Tema', darkMode: 'Modo Oscuro', lightMode: 'Modo Claro',
+    catStudio: 'Studio & Creativo', catMonopoly: 'Monopolio VRTX',
+  navStudio: 'VRTX Studio & Doblaje', navMarketplace: 'Marketplace Interno', navPay: 'VRTX Pay', navClass: 'VRTX Class',
+  navMail: 'Mail & Social CRM', navWebBuilder: 'Web Builder & Legal', navKanban: 'Kanban Pipeline', navCoreControl: 'Core Control',
+  connectionToken: 'Token de Conexión', tokenPlaceholder: 'Ej: VRTX-CORE-MASTER-2026',
+  planFree: 'Free Trial', planStandard: 'Standard', planBlackLabel: 'Black',
+  planFreeDesc: '10 créditos para probar', planStandardDesc: 'Plan profesional $97/mes', planBlackDesc: 'Todo ilimitado $997/mes',
+  workspace: 'Workspace', personalWorkspace: 'Personal', agencyWorkspace: 'Agencia',
+  proxyManager: 'Escudo Anti-Ban (Proxy Manager)', proxyManagerDesc: 'Rotación de IPs residenciales para blindar cuentas.',
+  rotateProxies: 'Rotar IPs', rotating: 'Rotando...', addProxy: 'Añadir Proxy',
+  studioTitle: 'VRTX Studio & Doblaje Global', studioSubtitle: 'Editor in-browser estilo CapCut + clonación de voz + doblaje IA.',
+  studioEditor: 'Studio Editor', trackVideo: 'Pista Vídeo', trackAudio: 'Pista Audio', trackSubtitle: 'Pista Subtítulo',
+  cloneVoice: 'Clonar Voz', cloningVoice: 'Clonando voz...', autoDub: 'Doblaje IA Automático', dubbingTo: 'Doblando a', renderPreview: 'Renderizar Preview', rendering: 'Renderizando...', uploadAudio: 'Subir Audio',
+  marketplaceTitle: 'VRTX Internal Marketplace', marketplaceSubtitle: 'Ecosistema cerrado: liste y afilie productos VRTX con 1 clic.',
+  listProduct: 'Listar Producto', affiliateNow: 'Afiliarse Ahora',
+  payTitle: 'VRTX Pay', paySubtitle: 'Checkout nativo con Order Bump y recuperación de Dunning.',
+  createOffer: 'Crear Oferta', offerName: 'Nombre de Oferta', orderBump: 'Order Bump', bumpPrice: 'Precio del Bump', generatePayLink: 'Generar Enlace de Pago', dunningManagement: 'Gestión de Dunning', recoverPayment: 'Recuperar Pago',
+  classTitle: 'VRTX Class', classSubtitle: 'Hospedaje de cursos con módulos drag & drop.',
+  createCourse: 'Crear Curso', courseName: 'Nombre del Curso', addModule: 'Añadir Módulo', moduleTitle: 'Título del Módulo', generateStudentLink: 'Generar Enlace de Alumnos', moveUp: 'Subir', moveDown: 'Bajar',
+  mailTitle: 'VRTX Mail & Social CRM', mailSubtitle: 'Embudos de email marketing y automatización social.',
+  emailFunnel: 'Embudo de Email', funnelSteps: 'Pasos del Embudo', trigger: 'Disparador', delay: 'Retraso', subject: 'Asunto', emailCopy: 'Copy del Email', generateEmailCopy: 'Generar Copy vía IA',
+  socialCRM: 'Social CRM', socialCRMSubtitle: 'Conexión Instagram/TikTok con envío automático de DM.', triggerKeyword: 'Palabra Disparadora', dmTemplate: 'Plantilla DM', dmDelay: 'Retraso DM (min)',
+  webBuilderTitle: 'VRTX Web Builder & Generador Legal', webBuilderSubtitle: 'Genere Landing Pages con preview, código fuente y documentos legales.',
+  sourceCode: 'Código Fuente', legalGenerator: 'Generador Legal', privacyPolicy: 'Política de Privacidad', termsOfUse: 'Términos de Uso', exportZip: 'Exportar .zip', heatmap: 'Heatmap', abTest: 'Test A/B', variantA: 'Variante A (Dolor)', variantB: 'Variante B (Beneficio)',
+  kanbanTitle: 'Sales & Content Kanban', kanbanSubtitle: 'Arrastre tarjetas de vídeos y leads entre columnas.',
+  colIdea: 'Idea/Lead', colProcess: 'En Proceso', colDone: 'Cerrado/Publicado', addCard: 'Añadir Tarjeta', cardTitle: 'Título de Tarjeta',
+  coreControlTitle: 'Core Control', coreControlSubtitle: 'Métricas globales del sistema e inyección de créditos en lote.',
+  mrrGlobal: 'MRR Global', churnRate: 'Churn Rate', ltv: 'LTV', batchInject: 'Inyección en Lote', coreOperator: 'CORE OPERATOR',
   },
 };
